@@ -1,0 +1,27 @@
+[
+  {
+    "username": "Bret",
+    "password": "3159",
+    "user_id": 1
+  },
+  {
+    "username": "Antonette",
+    "password": "asdfasdf",
+    "user_id": 2
+  },
+  {
+    "username": "Samantha",
+    "password": "12345678",
+    "user_id": 3
+  },
+  {
+    "username": "Karianne",
+    "password": "4572",
+    "user_id": 4
+  },
+  {
+    "username": "Kamren",
+    "password": "8129",
+    "user_id": 5
+  }
+]
