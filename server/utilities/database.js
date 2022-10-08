@@ -1,7 +1,7 @@
 const makeConnection = require("./makeConnection");
 
 async function callProcedure(procedure, isReturning, ...variables) {
-  const { connect, query, end } = await makeConnection();
+  const { connect, query, end } = makeConnection();
   let result;
   try {
     result = await connect();
@@ -27,6 +27,7 @@ async function callProcedure(procedure, isReturning, ...variables) {
     return result;
   } catch (error) {
     // errors are automatically thrown
+    if (error.fatal) return error; // only end if connection can be ended
     await end();
 
     return error;
