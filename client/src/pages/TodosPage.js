@@ -13,12 +13,12 @@ function TodosPage(props) {
     (async () => {
       const data = await getReq(`/api/users/${userId}/todos`);
       if (data instanceof Error) return navigate("/error/something went wrong");
-      if (!data) return;
       setTodos(data);
     })();
   }, [navigate, userId]);
 
-  // title, completedInit, todoId
+  // TODO add "save" button that sends request,
+  // TODO add event listener that warns users before leaving page that has unsaved work
   return (
     <div className="user-todos">
       {todos.map((todo) => (

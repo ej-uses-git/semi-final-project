@@ -2,7 +2,7 @@ const SERVER_URL = "http://localhost:8080";
 
 async function getReq(pathname) {
   const res = await fetch(`${SERVER_URL}${pathname}`, { method: "GET" });
-  if (!res.ok) return res;
+  if (!res.ok) return new Error(res.statusText);
   let data;
   if (res.headers.get("Content-type").includes("application/json"))
     data = await res.json();
@@ -17,7 +17,7 @@ async function postReq(pathname, body) {
     body: raw,
     headers: new Headers({ "Content-type": "application/json" }),
   });
-  if (!res.ok) return res.ok;
+  if (!res.ok) return new Error(res.statusText);
   let data;
   if (res.headers.get("Content-type").includes("application/json"))
     data = await res.json();
@@ -32,7 +32,7 @@ async function putReq(pathname, body) {
     body: raw,
     headers: new Headers({ "Content-type": "application/json" }),
   });
-  if (!res.ok) return res.ok;
+  if (!res.ok) return new Error(res.statusText);
   const data = await res.text();
   return data;
 }
@@ -41,7 +41,7 @@ async function deleteReq(pathname) {
   const res = await fetch(`${SERVER_URL}${pathname}`, {
     method: "DELETE",
   });
-  if (!res.ok) return res.ok;
+  if (!res.ok) return new Error(res.statusText);
   const data = await res.text();
   return data;
 }

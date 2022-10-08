@@ -408,7 +408,7 @@ DELIMITER ;
 --
 
 DROP USER IF EXISTS `server`@`localhost`;
-CREATE USER `server`@`localhost`;
+CREATE USER `server`@`localhost` IDENTIFIED BY 'serverushnt54';
 GRANT EXECUTE ON `users`.* TO `server`@`localhost`;
 
 -- Dump completed on 2022-10-08  1:50:06
