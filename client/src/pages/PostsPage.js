@@ -12,8 +12,7 @@ function PostsPage(props) {
   useEffect(() => {
     (async () => {
       const data = await getReq(`/api/users/${userId}/posts`);
-      if (data instanceof Error) return navigate("/error/something went wrong");
-      if (!data) return;
+      if (data instanceof Error) return navigate(`/error/${data}`);
       setPosts(data);
     })();
   }, [navigate, userId]);

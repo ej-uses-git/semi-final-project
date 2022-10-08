@@ -12,7 +12,7 @@ function Info(props) {
     (async () => {
       const data = await getReq(`/api/users/${userId}/info`);
       if (data instanceof Error || !data)
-        return navigate("/error/something went wrong");
+        return navigate(`/error/${data || "something went wrong"}`);
       setInfo(data);
     })();
   }, [navigate, userId]);

@@ -1,20 +1,19 @@
 import { useCallback, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { putReq } from "../utilities/fetchUtils";
 
 function Todo(props) {
-  const navigate = useNavigate();
-  const { title, completedInit, todoId } = props;
+  const { title, completedInit, todoId, makeChange } = props;
   const [checked, setChecked] = useState(completedInit);
 
   const handleChange = useCallback(async () => {
-    const data = await putReq(`/api/todos/${todoId}`, {
-      completed: !checked,
-    });
-    if (data instanceof Error || !data)
-      return navigate("/error/something went wrong");
-    setChecked((prev) => !prev);
-  }, [checked, navigate, todoId]);
+    makeChange(todoId, !checked);
+    setChecked(prev => !prev);
+    // const data = await putReq(`/api/todos/${todoId}`, {
+    //   completed: !checked,
+    // });
+    // if (data instanceof Error || !data)
+    //   return navigate("/error/something went wrong");
+    // setChecked((prev) => !prev);
+  }, [makeChange, todoId, checked]);
 
   return (
     <div className="todo">

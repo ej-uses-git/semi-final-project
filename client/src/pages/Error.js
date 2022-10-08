@@ -7,13 +7,14 @@ function Error(props) {
     <div className="error-page">
       <div className="error-message | fs-600 ff-headings fw-bold text-primary-600">
         {pathname
+          .split("/")
+          .slice(-1)[0]
           .toUpperCase()
-          .replaceAll("+", " ")
-          .replaceAll("%20", " ")
-          .replaceAll("/", " ")
-          .replace("ERROR", "ERROR:")}
+          .replaceAll(/[(%20|+|/)]/g, " ")}
       </div>
-      <Link to="/login" className="ff-body fw-regular fs-300 text-accent-500">Back to Log-In</Link>
+      <Link to="/login" className="ff-body fw-regular fs-300 text-accent-500">
+        Back to Log-In
+      </Link>
     </div>
   );
 }

@@ -14,7 +14,7 @@ router.post("/", async (req, res, next) => {
     password
   );
   if (result instanceof Error) return res.status(500).send(result.message);
-  if (!result) return res.status(400).send(false);
+  if (!result.length) return res.status(400).send(false);
   res.send(`${result[0].user_id}`);
 });
 

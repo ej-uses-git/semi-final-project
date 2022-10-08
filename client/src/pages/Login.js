@@ -34,6 +34,7 @@ function Login(props) {
         </label>
         <input
           ref={usernameInput}
+          required
           autoComplete="off"
           className="form-input"
           id="username"
@@ -51,6 +52,7 @@ function Login(props) {
           Enter a password:
         </label>
         <input
+          required
           className="form-input"
           id="password"
           type="password"

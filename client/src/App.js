@@ -9,6 +9,8 @@ import Login from "./pages/Login";
 import Error from "./pages/Error";
 
 function App() {
+  // TODO use a ref or global variable to keep track of data retrieved from the server, and check in pages/components to see if request is needed
+
   return (
     <BrowserRouter>
       <Routes>

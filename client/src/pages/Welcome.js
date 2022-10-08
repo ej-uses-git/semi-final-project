@@ -11,7 +11,6 @@ function Welcome(props) {
     if (name) return;
     (async () => {
       const data = await getReq(`/api/users/${userId}`);
-      // TODO copy this everywhere
       if (data instanceof Error || !data)
         return navigate(`/error/${data || "something went wrong"}`);
       setName(data);
