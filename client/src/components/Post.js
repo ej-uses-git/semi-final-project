@@ -1,36 +1,57 @@
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Comment from "./Comment";
 import { getReq } from "../utilities/fetchUtils";
 import NewCommentForm from "./NewCommentForm";
+import { CacheContext } from "../App";
 
 function Post(props) {
   const navigate = useNavigate();
   const { userId } = useParams();
   const { title, fullName, body, postId } = props;
+
+  const { retrieveFromCache, addToCache } = useContext(CacheContext);
+
   const [comments, setComments] = useState([]);
   const [sentRequest, setSentRequest] = useState(false);
   const [display, setDisplay] = useState(false);
 
   const getComments = useCallback(async () => {
+    const storedComments = retrieveFromCache("comments", postId);
+    if (storedComments) return setComments(storedComments);
     const data = await getReq(`/api/posts/${postId}/comments`);
     if (data instanceof Error) return navigate("/error/something went wrong");
     setSentRequest(true);
     if (!data) return;
     setComments(data);
-  }, [navigate, postId]);
+    addToCache("comments", data, postId);
+  }, [navigate, postId, addToCache, retrieveFromCache]);
 
-  const removeComment = useCallback((commentId) => {
-    return () => {
-      setComments((prev) =>
-        prev.filter((comment) => comment.comment_id !== commentId)
-      );
-    };
-  }, []);
+  const removeComment = useCallback(
+    (commentId) => {
+      return () => {
+        setComments((prev) => {
+          const copy = prev.filter(
+            (comment) => comment.comment_id !== commentId
+          );
+          addToCache("comments", copy, postId);
+          return copy;
+        });
+      };
+    },
+    [addToCache, postId]
+  );
 
-  const addComment = useCallback((comment) => {
-    setComments((prev) => [...prev, comment]);
-  }, []);
+  const addComment = useCallback(
+    (comment) => {
+      setComments((prev) => {
+        const copy = [...prev, comment];
+        addToCache("comments", copy, postId);
+        return copy;
+      });
+    },
+    [addToCache, postId]
+  );
 
   return (
     <div className="post">

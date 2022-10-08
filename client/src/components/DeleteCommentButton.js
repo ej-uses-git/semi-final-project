@@ -6,19 +6,29 @@ function DeleteCommentButton(props) {
   const { removeComment, commentId } = props;
   const navigate = useNavigate();
 
-  const handleClick = useCallback(async () => {
-    const data = await deleteReq(`/api/comments/${commentId}`);
-    if (data instanceof Error) return navigate("/error/something went wrong");
-    removeComment();
-  }, [removeComment, commentId, navigate]);
+  const handleClick = useCallback(
+    async (id) => {
+      const data = await deleteReq(`/api/comments/${commentId}`);
+      if (data instanceof Error) return navigate("/error/something went wrong");
+      removeComment();
+    },
+    [removeComment, commentId, navigate]
+  );
 
   return (
     <>
-      <button onClick={handleClick} className="visibly-hidden" id="delete-btn">
+      <button
+        onClick={handleClick}
+        className="visibly-hidden"
+        id={`delete-btn-${commentId}`}
+      >
         Delete
       </button>
 
-      <label htmlFor="delete-btn" className="trash-icon-container">
+      <label
+        htmlFor={`delete-btn-${commentId}`}
+        className="trash-icon-container"
+      >
         <svg
           tabIndex={0}
           onKeyDown={(e) =>

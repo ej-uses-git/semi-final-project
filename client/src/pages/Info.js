@@ -1,21 +1,28 @@
 // display information about the user
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getReq } from "../utilities/fetchUtils";
+import { CacheContext } from "../App";
 
 function Info(props) {
   const navigate = useNavigate();
   const { userId } = useParams();
+
+  const { retrieveFromCache, addToCache } = useContext(CacheContext);
+
   const [info, setInfo] = useState({});
 
   useEffect(() => {
+    const storedInfo = retrieveFromCache("info");
+    if (storedInfo.full_name) return setInfo(storedInfo);
     (async () => {
       const data = await getReq(`/api/users/${userId}/info`);
       if (data instanceof Error || !data)
         return navigate(`/error/${data || "something went wrong"}`);
       setInfo(data);
+      addToCache("info", data);
     })();
-  }, [navigate, userId]);
+  }, [navigate, userId, addToCache, retrieveFromCache]);
 
   return (
     <>

@@ -7,12 +7,6 @@ function Todo(props) {
   const handleChange = useCallback(async () => {
     makeChange(todoId, !checked);
     setChecked(prev => !prev);
-    // const data = await putReq(`/api/todos/${todoId}`, {
-    //   completed: !checked,
-    // });
-    // if (data instanceof Error || !data)
-    //   return navigate("/error/something went wrong");
-    // setChecked((prev) => !prev);
   }, [makeChange, todoId, checked]);
 
   return (

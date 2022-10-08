@@ -7,30 +7,73 @@ import UserPage from "./pages/UserPage";
 import Welcome from "./pages/Welcome";
 import Login from "./pages/Login";
 import Error from "./pages/Error";
+import { createContext, useCallback, useRef } from "react";
+
+export const CacheContext = createContext();
 
 function App() {
-  // TODO use a ref or global variable to keep track of data retrieved from the server, and check in pages/components to see if request is needed
+  const cache = useRef({
+    fullName: "",
+    info: {},
+    posts: [],
+    todos: [],
+    comments: {},
+  });
+
+  const addToCache = useCallback((target, value, inner) => {
+    if (inner)
+      return (cache.current[target][inner] =
+        value instanceof Array ? [...value] : { ...value });
+    if (typeof cache.current[target] === "string")
+      return (cache.current[target] = value);
+    if (cache.current[target] instanceof Array)
+      return (cache.current[target] = [...value]);
+    cache.current[target] = { ...value };
+  }, []);
+
+  const retrieveFromCache = useCallback((target, inner) => {
+    if (!inner) return cache.current[target];
+    return cache.current[target][inner];
+  }, []);
+
+  const clearCache = useCallback(() => {
+    cache.current = {
+      fullName: "",
+      info: {},
+      posts: [],
+      todos: [],
+      comments: {},
+    };
+  }, []);
+
+  const cacheUtils = {
+    addToCache,
+    clearCache,
+    retrieveFromCache,
+  };
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
+      <CacheContext.Provider value={cacheUtils}>
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" />} />
 
-        <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login />} />
 
-        <Route path="/users/:userId" element={<UserPage />}>
-          <Route index element={<Welcome />} />
-          <Route path="info" element={<Info />} />
-          <Route path="todos" element={<TodosPage />} />
-          <Route path="posts" element={<PostsPage />} />
-        </Route>
+          <Route path="/users/:userId" element={<UserPage />}>
+            <Route index element={<Welcome />} />
+            <Route path="info" element={<Info />} />
+            <Route path="todos" element={<TodosPage />} />
+            <Route path="posts" element={<PostsPage />} />
+          </Route>
 
-        <Route path="/error">
-          <Route path="*" element={<Error />} />
-        </Route>
+          <Route path="/error">
+            <Route path="*" element={<Error />} />
+          </Route>
 
-        <Route path="/*" element={<Navigate to="/error/page not found" />} />
-      </Routes>
+          <Route path="/*" element={<Navigate to="/error/page not found" />} />
+        </Routes>
+      </CacheContext.Provider>
     </BrowserRouter>
   );
 }

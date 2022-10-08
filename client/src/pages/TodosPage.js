@@ -1,15 +1,18 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import Todo from "../components/ToDo";
 import { getReq, putReq } from "../utilities/fetchUtils";
+import { CacheContext } from "../App";
 
 const history = createBrowserHistory();
-// page to display user todos
+
 function TodosPage(props) {
   const { userId } = useParams();
   const navigate = useNavigate();
   const unlisten = useRef();
+
+  const { addToCache, retrieveFromCache } = useContext(CacheContext);
 
   const [todos, setTodos] = useState([]);
   const [unsavedChanges, setUnsavedChanges] = useState([]);
@@ -45,6 +48,7 @@ function TodosPage(props) {
         item.completed = !item.completed;
         const copy = [...prev];
         copy[todoIndex] = item;
+        addToCache("todos", copy);
         return copy;
       });
     }
@@ -53,7 +57,18 @@ function TodosPage(props) {
       unlisten.current();
       unlisten.current = null;
     }
-  }, [navigate, unsavedChanges]);
+  }, [navigate, unsavedChanges, addToCache]);
+
+  useEffect(() => {
+    const storedTodos = retrieveFromCache("todos");
+    if (storedTodos.length) return setTodos(storedTodos);
+    (async () => {
+      const data = await getReq(`/api/users/${userId}/todos`);
+      if (data instanceof Error) return navigate(`/error/${data}`);
+      setTodos(data);
+      addToCache("todos", data);
+    })();
+  }, [navigate, userId, addToCache, retrieveFromCache]);
 
   useEffect(() => {
     if (!unsavedChanges.length) {
@@ -71,14 +86,6 @@ function TodosPage(props) {
       navigate("");
     });
   }, [unsavedChanges.length, navigate]);
-
-  useEffect(() => {
-    (async () => {
-      const data = await getReq(`/api/users/${userId}/todos`);
-      if (data instanceof Error) return navigate(`/error/${data}`);
-      setTodos(data);
-    })();
-  }, [navigate, userId]);
 
   return (
     <div className="user-todos">
