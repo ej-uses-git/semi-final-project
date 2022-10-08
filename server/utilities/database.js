@@ -54,7 +54,9 @@ async function postNewComment(body, commenterId, postId) {
     return result[0];
   } catch (error) {
     // errors are automatically thrown
+    if (error.fatal) return error; // only end if connection can be ended
     await end();
+
     return error;
   }
 }
