@@ -8,6 +8,7 @@ import Welcome from "./pages/Welcome";
 import Login from "./pages/Login";
 import Error from "./pages/Error";
 import { createContext, useCallback, useRef } from "react";
+import LandingPage from "./pages/LandingPage";
 
 export const CacheContext = createContext();
 
@@ -56,7 +57,7 @@ function App() {
     <BrowserRouter>
       <CacheContext.Provider value={cacheUtils}>
         <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/" element={<LandingPage />} />
 
           <Route path="/login" element={<Login />} />
 

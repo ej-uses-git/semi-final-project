@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { postReq } from "../utilities/fetchUtils";
 
 function Login(props) {
-  //TODO add landing page to check if there is a current user
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
