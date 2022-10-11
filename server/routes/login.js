@@ -7,6 +7,7 @@ const { callProcedure } = require("../utilities/database");
 /* POST to Check Login Info */
 router.post("/", async (req, res, next) => {
   const { username, password } = req.body;
+  if (!username || !password) return res.status(400).send(false);
   const result = await callProcedure(
     "check_login_info",
     true,

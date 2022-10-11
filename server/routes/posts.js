@@ -18,7 +18,8 @@ router.get("/:postId/comments", async (req, res, next) => {
 /* POST New Comment */
 router.post("/:postId/comments", async (req, res, next) => {
   const { postId } = req.params;
-  const { body, commenterId } = req.body;
+  let { body, commenterId } = req.body;
+  body = body.replaceAll(/\\/g, "\\\\").replaceAll(/'/g, "\\'");
   const result = await postNewComment(body, commenterId, postId);
   if (result instanceof Error) return res.status(500).send(result.message);
   if (!result) return res.status(400).send(false);
